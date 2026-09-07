@@ -146,7 +146,7 @@ Updated State
 ```
 The project does not claim that BDH literally reproduces biological synapses. Instead, it explores computational mechanisms inspired by associative memory and synaptic plasticity.
 
-🧩 Interactive Architecture
+## 🧩 Interactive Architecture
 
 The web application is built as an interactive educational experience.
 ```
@@ -186,7 +186,7 @@ The web application is built as an interactive educational experience.
 │ Evidence + trade-offs + open questions       │
 └──────────────────────────────────────────────┘
 ```
-📊 Architectural Comparison
+## 📊 Architectural Comparison
 Dimension	Transformer + CoT	Test-Time Optimization	Recurrent Latent Reasoning
 Reasoning representation	Generated tokens	Optimization process	Latent state
 Context expansion	Yes	Generally limited	Designed to remain bounded
@@ -198,7 +198,7 @@ Long-context motivation	Expensive memory	Compute intensive	Compact recurrent rep
 
 Complexity and memory characteristics depend on the exact implementation. The table describes the architectural motivation rather than claiming that every implementation has identical scaling.
 
-🧪 Interactive Reasoning Sandbox
+## 🧪 Interactive Reasoning Sandbox
 
 The project includes deterministic reasoning environments designed to demonstrate the difference between:
 
@@ -230,7 +230,7 @@ Answer
 ```
 Users can adjust recurrence depth and observe how the internal state changes over multiple iterations.
 
-📈 Latent-State Visualization
+## 📈 Latent-State Visualization
 
 The application visualizes the evolution of the latent state:
 ```
@@ -256,7 +256,7 @@ Latent State Space
 ```
 The visualization is intended for intuition rather than claiming that a 2D projection completely represents the model's internal computation.
 
-⚡ Resource Telemetry
+## ⚡ Resource Telemetry
 
 The demo provides conceptual comparisons of:
 
@@ -269,7 +269,7 @@ Reasoning depth
 
 The telemetry is primarily educational and should not be interpreted as a hardware-level benchmark unless explicitly labeled as such.
 
-🧠 Why This Matters
+## 🧠 Why This Matters
 
 The project investigates an important question for future reasoning systems:
 
@@ -301,92 +301,7 @@ Harder to verify directly
 ```
 Therefore, this project treats efficiency and interpretability as a trade-off, rather than assuming latent reasoning is universally superior.
 
-🧪 Evidence Classification
-
-The project separates different types of evidence.
-
-Local Deterministic Experiments
-
-The following components run locally in the browser:
-
-Constraint validation
-Reasoning demonstrations
-Latent-state simulations
-Vector trajectory visualization
-PCA projections
-Resource visualizations
-
-These are deterministic educational simulations rather than claims of reproducing the complete BDH-CQ training system.
-
-Published Research
-
-Claims about BDH, BDH-CQ, ARC-AGI, and related architectures should be interpreted according to their original research papers, experimental setups, model sizes, evaluation protocols, and compute budgets.
-
-🏗️ Technology Stack
-Frontend
-React
-Next.js
-TypeScript
-Tailwind CSS
-Visualization
-HTML5 Canvas
-Interactive state visualization
-PCA-based trajectory visualization
-Development
-Node.js
-npm
-Git
-GitHub
-Vercel
-🚀 Local Development
-Prerequisites
-
-Make sure you have:
-
-Node.js 18+
-npm
-Git
-
-Check your installation:
-```
-node --version
-npm --version
-git --version
-```
-Clone the Repository
-```
-git clone https://github.com/Puneetas015/bdh-cq-latent-reasoning.git
-cd bdh-cq-latent-reasoning
-```
-Install Dependencies
-```
-npm install
-```
-Start Development Server
-```
-npm run dev
-```
-Open your browser:
-```
-http://localhost:3000
-```
-📦 Production Build
-
-Create a production build:
-```
-npm run build
-```
-Start the production server:
-```
-npm start
-```
-🔍 Linting
-
-If ESLint is configured:
-```
-npm run lint
-```
-🌐 Deployment
+## 🌐 Deployment
 
 The project can be deployed using Vercel.
 
@@ -422,7 +337,7 @@ bdh-cq-latent-reasoning/
 ```
 The structure above is an example. Your actual repository structure may differ.
 
-📚 Primary References
+## 📚 Primary References
 BDH-CQ
 ```
 \@article{engdahl2026bdhcq,
@@ -450,19 +365,7 @@ BDH / Dragon Hatchling
   year={2025}
 }
 ```
-🤖 AI Assistance Disclosure
-
-Generative AI tools were used during development for:
-
-Boilerplate scaffolding
-Syntax assistance
-UI implementation support
-Tailwind CSS refinement
-Documentation drafting
-
-The project author remains responsible for reviewing the implementation, mathematical explanations, experimental methodology, and cited research claims.
-
-⚠️ Limitations
+## ⚠️ Limitations
 
 This project is primarily an interactive educational and research-exploration artifact.
 
@@ -475,7 +378,7 @@ Evidence that biological neurons and BDH perform identical computations
 
 The visualizations are designed to make difficult architectural concepts easier to understand.
 
-🔭 Future Work
+## 🔭 Future Work
 
 Potential extensions include:
 
@@ -487,26 +390,8 @@ Studying latent-state interpretability
 Investigating sparse associative updates
 Adding reproducible benchmark scripts
 Comparing different recurrent state sizes and recurrence depths
-📄 License
 
-This project is intended for research and educational purposes.
-
-Add an appropriate license file to the repository if you intend to distribute the source code publicly.
-
-⭐ Acknowledgements
-
-This project is inspired by research into:
-
-Recurrent neural networks
-Transformer alternatives
-Associative memory
-Synaptic plasticity
-Latent reasoning
-Test-time computation
-ARC-AGI
-Brain-inspired neural architectures
-
-⭐ If you find this project useful
+## ⭐ If you find this project useful
 
 Consider giving the repository a star and sharing it with others interested in:
 
