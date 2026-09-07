@@ -256,51 +256,6 @@ Latent State Space
 ```
 The visualization is intended for intuition rather than claiming that a 2D projection completely represents the model's internal computation.
 
-## ⚡ Resource Telemetry
-
-The demo provides conceptual comparisons of:
-
-Generated reasoning tokens
-Approximate KV-cache growth
-Latent-state iterations
-Relative memory requirements
-Relative computation
-Reasoning depth
-
-The telemetry is primarily educational and should not be interpreted as a hardware-level benchmark unless explicitly labeled as such.
-
-## 🧠 Why This Matters
-
-The project investigates an important question for future reasoning systems:
-
-Does reasoning always need to be represented as a growing sequence of language tokens?
-
-Token-based reasoning has an important advantage:
-```
-Human-readable
-      ↓
-Easy to inspect
-      ↓
-Easy to debug
-```
-Latent reasoning potentially offers:
-```
-Compact internal computation
-      ↓
-Less explicit token generation
-      ↓
-Potentially different memory/compute trade-offs
-```
-But it introduces an important disadvantage:
-```
-Less visible reasoning
-      ↓
-Harder to interpret
-      ↓
-Harder to verify directly
-```
-Therefore, this project treats efficiency and interpretability as a trade-off, rather than assuming latent reasoning is universally superior.
-
 ## 🌐 Deployment
 
 The project can be deployed using Vercel.
