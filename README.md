@@ -54,7 +54,7 @@ Instead of requiring every intermediate reasoning step to become a text token, t
 
 This project provides an interactive way to understand that idea through visual simulations, equations, resource comparisons, and reasoning experiments.
 
-##🎯 Central Research Question
+## 🎯 Central Research Question
 
 Can iterative refinement of a fixed-dimensional latent state provide useful reasoning without explicitly expanding the context with a long chain of generated reasoning tokens?
 
@@ -63,7 +63,7 @@ The project explores this question from three perspectives:
 Reasoning efficiency
 Memory efficiency
 Interpretability trade-offs
-#🔬 Core Concepts
+## 🔬 Core Concepts
 1. Recurrent Latent Reasoning
 
 Traditional token-based reasoning can be represented as:
