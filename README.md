@@ -33,11 +33,11 @@ Reasoning Step 2
 Reasoning Step 3
    ↓
 Final Answer
-
+```
 This approach is commonly associated with Chain-of-Thought (CoT) reasoning.
 
 BDH-CQ explores a different idea:
-
+```
 Question
    ↓
 Latent State
@@ -49,7 +49,7 @@ State Update
 State Update
    ↓
 Final Answer
-
+```
 Instead of requiring every intermediate reasoning step to become a text token, the model can repeatedly refine an internal latent representation.
 
 This project provides an interactive way to understand that idea through visual simulations, equations, resource comparisons, and reasoning experiments.
@@ -63,11 +63,11 @@ The project explores this question from three perspectives:
 Reasoning efficiency
 Memory efficiency
 Interpretability trade-offs
-🔬 Core Concepts
+#🔬 Core Concepts
 1. Recurrent Latent Reasoning
 
 Traditional token-based reasoning can be represented as:
-
+```
 Input
  ↓
 Token
@@ -79,9 +79,9 @@ Token
 Token
  ↓
 Answer
-
+```
 Recurrent latent reasoning instead maintains an internal state:
-
+```
 Input
  ↓
 h₀
@@ -93,26 +93,27 @@ h₂
 h₃
  ↓
 Answer
-
+```
 The internal state is repeatedly updated rather than continuously extending the textual context.
 
 Conceptually:
-
+```
 hₜ₊₁ = Uθ(hₜ, xₜ)
+```
 2. KV-Cache Bottleneck
 
 Transformer models typically maintain Key/Value representations for previously processed tokens.
 
 Conceptually:
-
+```
 Token 1 → K₁, V₁
 Token 2 → K₂, V₂
 Token 3 → K₃, V₃
 ...
 Token N → Kₙ, Vₙ
-
+```
 As the context grows:
-
+```
 More Tokens
      ↓
 More K/V Entries
@@ -120,7 +121,7 @@ More K/V Entries
 Larger KV Cache
      ↓
 Higher Memory Usage
-
+```
 This becomes an important consideration for very long-context reasoning.
 
 3. Synaptic Plasticity
@@ -134,7 +135,7 @@ A simplified Hebbian-learning intuition is:
 Neurons that repeatedly activate together can strengthen their connection.
 
 The computational intuition can be represented as:
-
+```
 New Information
       ↓
 Internal State
@@ -142,13 +143,13 @@ Internal State
 Associative Update
       ↓
 Updated State
-
+```
 The project does not claim that BDH literally reproduces biological synapses. Instead, it explores computational mechanisms inspired by associative memory and synaptic plasticity.
 
 🧩 Interactive Architecture
 
 The web application is built as an interactive educational experience.
-
+```
 ┌──────────────────────────────────────────────┐
 │          Architectural Paradox               │
 │                                              │
@@ -184,6 +185,7 @@ The web application is built as an interactive educational experience.
 │                                              │
 │ Evidence + trade-offs + open questions       │
 └──────────────────────────────────────────────┘
+```
 📊 Architectural Comparison
 Dimension	Transformer + CoT	Test-Time Optimization	Recurrent Latent Reasoning
 Reasoning representation	Generated tokens	Optimization process	Latent state
@@ -201,6 +203,7 @@ Complexity and memory characteristics depend on the exact implementation. The ta
 The project includes deterministic reasoning environments designed to demonstrate the difference between:
 
 Token-Based Reasoning
+```
 Question
    ↓
 Reasoning Token
@@ -210,7 +213,9 @@ Reasoning Token
 Reasoning Token
    ↓
 Answer
+```
 Latent-State Iterative Refinement
+```
 Question
    ↓
 State₀
@@ -222,21 +227,21 @@ State₂
 State₃
    ↓
 Answer
-
+```
 Users can adjust recurrence depth and observe how the internal state changes over multiple iterations.
 
 📈 Latent-State Visualization
 
 The application visualizes the evolution of the latent state:
-
+```
 h₀ → h₁ → h₂ → h₃ → ... → hₜ
-
+```
 A dimensionality-reduction projection can be used to display the trajectory in a human-readable 2D space.
 
 Conceptually:
 
+```
 Latent State Space
-
        • h₀
 
           • h₁
@@ -248,7 +253,7 @@ Latent State Space
                    • h₄
                       ↓
                   Attractor
-
+```
 The visualization is intended for intuition rather than claiming that a 2D projection completely represents the model's internal computation.
 
 ⚡ Resource Telemetry
@@ -271,29 +276,29 @@ The project investigates an important question for future reasoning systems:
 Does reasoning always need to be represented as a growing sequence of language tokens?
 
 Token-based reasoning has an important advantage:
-
+```
 Human-readable
       ↓
 Easy to inspect
       ↓
 Easy to debug
-
+```
 Latent reasoning potentially offers:
-
+```
 Compact internal computation
       ↓
 Less explicit token generation
       ↓
 Potentially different memory/compute trade-offs
-
+```
 But it introduces an important disadvantage:
-
+```
 Less visible reasoning
       ↓
 Harder to interpret
       ↓
 Harder to verify directly
-
+```
 Therefore, this project treats efficiency and interpretability as a trade-off, rather than assuming latent reasoning is universally superior.
 
 🧪 Evidence Classification
@@ -343,35 +348,44 @@ npm
 Git
 
 Check your installation:
-
+```
 node --version
 npm --version
 git --version
+```
 Clone the Repository
+```
 git clone https://github.com/Puneetas015/bdh-cq-latent-reasoning.git
 cd bdh-cq-latent-reasoning
+```
 Install Dependencies
+```
 npm install
+```
 Start Development Server
+```
 npm run dev
-
+```
 Open your browser:
-
+```
 http://localhost:3000
+```
 📦 Production Build
 
 Create a production build:
-
+```
 npm run build
-
+```
 Start the production server:
-
+```
 npm start
+```
 🔍 Linting
 
 If ESLint is configured:
-
+```
 npm run lint
+```
 🌐 Deployment
 
 The project can be deployed using Vercel.
@@ -379,9 +393,11 @@ The project can be deployed using Vercel.
 For a standard Next.js deployment, Vercel can automatically detect the framework and configure the build.
 
 Build locally before deployment:
-
+```
 npm run build
+```
 📁 Project Structure
+```
 bdh-cq-latent-reasoning/
 │
 ├── app/
@@ -403,31 +419,37 @@ bdh-cq-latent-reasoning/
 ├── tailwind.config.ts
 ├── next.config.js
 └── README.md
-
+```
 The structure above is an example. Your actual repository structure may differ.
 
 📚 Primary References
 BDH-CQ
-@article{engdahl2026bdhcq,
+```
+\@article{engdahl2026bdhcq,
   title={BDH-CQ: In-Context Learning with Recurrent Latent Reasoning},
   author={Engdahl, B. and Chorowski, J. and Kosowski, A. and Stamirowska, Z. and Uznański, P. and others},
   journal={arXiv preprint arXiv:2608.09888},
   year={2026}
 }
+```
 Measure of Intelligence
+```
 @article{chollet2019measure,
   title={On the Measure of Intelligence},
   author={Chollet, Francois},
   journal={arXiv preprint arXiv:1911.01547},
   year={2019}
 }
+```
 BDH / Dragon Hatchling
+```
 @techreport{pathway2025bdh,
   title={BDH (Dragon Hatchling): A Brain-Inspired Post-Transformer Architecture},
   author={{Pathway Research}},
   institution={Pathway},
   year={2025}
 }
+```
 🤖 AI Assistance Disclosure
 
 Generative AI tools were used during development for:
@@ -483,13 +505,7 @@ Latent reasoning
 Test-time computation
 ARC-AGI
 Brain-inspired neural architectures
-👤 Author
 
-Puneet Chaudhary
-
-GitHub: https://github.com/Puneetas015
-Project: https://github.com/Puneetas015/bdh-cq-latent-reasoning
-Live Demo: https://bdh-cq-latent-reasoning.vercel.app
 ⭐ If you find this project useful
 
 Consider giving the repository a star and sharing it with others interested in:
@@ -503,3 +519,4 @@ Then push it:
 git add README.md
 git commit -m "docs: update comprehensive README"
 git push origin main
+```
