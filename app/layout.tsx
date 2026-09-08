@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
 import "./globals.css";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "LatentRelax | Recurrent Latent-Space Reasoning vs. Chain-of-Thought",
-  description: "Interactive visual essay on continuous latent relaxation in BDH-CQ.",
+  title: "BDH-CQ // Latent Reasoning Research",
+  description: "Recurrent latent computation vs autoregressive token chain-of-thought",
 };
 
 export default function RootLayout({
@@ -12,8 +12,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="antialiased selection:bg-brandGreen/20 selection:text-brandGreen">
+    <html lang="en" className="scroll-smooth">
+      <body className="bg-[#080B10] text-[#e2e8f0] antialiased">
         {children}
       </body>
     </html>

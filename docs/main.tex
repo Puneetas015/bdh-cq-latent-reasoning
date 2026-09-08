@@ -1,5 +1,5 @@
 \documentclass[9.5pt,a4paper]{article}
-\usepackage[margin=0.5in,top=0.45in,bottom=0.45in]{geometry}
+\usepackage[margin=0.48in,top=0.42in,bottom=0.42in]{geometry}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
 \usepackage{tabularx}
@@ -14,11 +14,11 @@
     urlcolor=blue
 }
 
-\setlist{nosep,leftmargin=1.1em}
+\setlist{nosep,leftmargin=1.15em}
 
-\title{\vspace{-1.2em}\textbf{\Large Beyond Token Serialization: Recurrent Latent Relaxation and In-Context Adaptation in BDH-CQ}\vspace{-0.7em}}
-\author{}
-\date{\vspace{-2.5em}}
+\title{\vspace{-1.4em}\textbf{\Large Beyond Token Serialization: Recurrent Latent Relaxation and In-Context Adaptation in BDH-CQ}\vspace{-0.6em}}
+\author{\textbf{Puneet Tiwari} \\ \small DataForge 2026: Pathway Track \quad $\cdot$ \quad NeurIPS 2026 Education Track Briefing}
+\date{\vspace{-2.0em}}
 
 \begin{document}
 
@@ -27,87 +27,88 @@
 
 \begin{abstract}
 \vspace{-0.4em}
-\noindent Standard autoregressive Large Language Models (LLMs) rely on verbal Chain-of-Thought (CoT) prompting to execute multi-step reasoning. We argue that token serialization is an architectural crutch for the fixed computational depth of standard Transformers rather than a biological necessity. Pathway's Dragon Hatchling (BDH) architecture family, specifically BDH-CQ, provides a post-Transformer alternative: few-shot demonstrations are assimilated into recurrent associative state during the forward pass, and reasoning is performed via iterative latent relaxation. This briefing formalizes BDH-CQ mechanics, examines verified benchmark results on ARC-AGI-1 and Sudoku Extreme, and evaluates the non-trivial trade-off between compute efficiency and intermediate token-level interpretability.
+\noindent Standard autoregressive Large Language Models (LLMs) rely on verbal Chain-of-Thought (CoT) prompting to execute multi-step reasoning. We argue that token serialization is an architectural crutch for the fixed computational depth of standard Transformers rather than a biological necessity. Pathway's Dragon Hatchling (BDH) architecture family, specifically BDH-CQ, introduces an alternative: few-shot demonstrations are assimilated into recurrent associative memory during the forward pass, and reasoning is performed via iterative latent relaxation. This technical briefing formalizes BDH-CQ mechanics, examines verified benchmark results on ARC-AGI-1 and Sudoku Extreme, and evaluates the non-trivial trade-off between compute efficiency and intermediate token-level interpretability.
 \vspace{-0.4em}
 \end{abstract}
 
-\vspace{-0.6em}
+\vspace{-0.5em}
 \section{The Token Serialization Bottleneck}
-\vspace{-0.3em}
-Autoregressive Transformers have static layer depth $L$, strictly bounding the computation executed per forward pass. Chain-of-Thought (CoT) circumvents this constraint by externalizing intermediate steps as emitted natural-language tokens, feeding each symbol back into the attention window so subsequent passes borrow computational depth from sequence length.
+\vspace{-0.25em}
+Autoregressive Transformers have static layer depth $L$, strictly bounding the compute executed per forward pass. Chain-of-Thought (CoT) circumvents this constraint by externalizing intermediate steps as emitted natural-language tokens, feeding each symbol back into the attention window so subsequent passes borrow computational depth from sequence length.
 However, token serialization introduces three fundamental structural inefficiencies:
 \begin{enumerate}
-    \item \textbf{Linear Memory Expansion:} State footprint scales as $\mathcal{O}(T)$ in token sequence length, inflating Key-Value (KV) cache memory.
-    \item \textbf{Token Compute Overhead:} Full autoregressive projection is paid for conversational syntax, punctuation, and linguistic filler.
+    \item \textbf{Linear Memory Expansion:} State footprint scales as $\mathcal{O}(T)$ in token sequence length, inflating Key-Value (KV) cache memory and saturating high-bandwidth memory (HBM).
+    \item \textbf{Token Compute Overhead:} Full autoregressive projection is paid for conversational syntax, punctuation, and linguistic filler that carry negligible logical entropy.
     \item \textbf{Verbosity-Bound Cost:} Inference FLOPs scale with natural language verbosity rather than intrinsic problem complexity.
 \end{enumerate}
 
-\vspace{-0.5em}
+\vspace{-0.45em}
 \section{Formal Mechanics of BDH-CQ}
-\vspace{-0.3em}
+\vspace{-0.25em}
 BDH-CQ eliminates intermediate token generation by moving reasoning into continuous latent dynamics \cite{bdhcq2026, pathway2025}:
 
-\vspace{0.15em}
+\vspace{0.1em}
 \noindent\textbf{1. Forward-Pass Demonstration Assimilation.} Unlike test-time optimization frameworks that execute gradient descent across demonstration samples, BDH-CQ updates an associative context state $S_t$ strictly during the inference forward pass:
 \begin{equation}
     S_t = U_{\theta}(S_{t-1}, D_t)
 \end{equation}
-where $D_t$ is an observed input-output demonstration and $U_\theta$ is a learned, frozen update operator. Context is compressed into fixed-rank associative memory using linear attention and ReLU low-rank projections, maintaining $\mathcal{O}(1)$ working memory complexity \cite{bdhcq2026}.
+where $D_t = (x_t, y_t)$ is an observed input-output demonstration tuple and $U_\theta$ is a learned, frozen associative update operator. Context is compressed into fixed-rank associative memory using linear attention and non-negative ReLU low-rank projections, maintaining invariant $\mathcal{O}(1)$ working memory complexity \cite{bdhcq2026}.
 
-\vspace{0.15em}
-\noindent\textbf{2. Recurrent Latent Relaxation.} Queries are resolved by repeatedly cycling a continuous hidden vector $h \in \mathbb{R}^d$ through a recurrent operator across depth $t \in \{1, \dots, T\}$ without token generation:
+\vspace{0.1em}
+\noindent\textbf{2. Recurrent Latent Relaxation.} Queries are resolved by repeatedly cycling a continuous hidden vector $h \in \mathbb{R}^d$ through a recurrent operator across depth $t \in \{1, \dots, T\}$ without textual token generation:
 \begin{equation}
     h_{t+1} = \mathrm{LayerNorm}\big(h_t + \alpha \cdot \mathrm{ReLU}(W h_t - b)\big)
 \end{equation}
-The weight matrix $W$ and bias $b$ define a dynamical system whose attractor basins correspond to constraint satisfaction, constrained by biologically inspired non-negative activation sparsity ($\sim$5\% active units) \cite{pathway2025}. Sequence length remains invariant ($\mathcal{O}(1)$).
+The recurrent operator $W$ and bias $b$ define a dynamical system whose attractor basins correspond to constraint satisfaction, constrained by biologically inspired non-negative activation sparsity ($\sim$5\% active units) \cite{pathway2025}. Sequence length remains invariant ($\mathcal{O}(1)$).
 
-\vspace{-0.4em}
+\vspace{-0.35em}
 \section{Architectural Landscape Comparison}
-\vspace{-0.3em}
+\vspace{-0.25em}
 Table~\ref{tab:comparison} contrasts BDH-CQ against token-based CoT and optimization solvers on the ARC-AGI benchmark \cite{chollet2019}.
 
 \begin{table}[h!]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3.5pt}
-\renewcommand{\arraystretch}{1.05}
+\renewcommand{\arraystretch}{1.02}
 \begin{tabularx}{\textwidth}{@{}lXXX@{}}
 \toprule
-\textbf{Dimension} & \textbf{Standard Dense Transformer + CoT} & \textbf{Test-Time Optimization (HRM / TRM)} & \textbf{BDH-CQ (Pathway Research)} \\ \midrule
+\textbf{Dimension} & \textbf{Standard Dense Transformer + CoT} & \textbf{Test-Time Training (TTT / HRM / TRM)} & \textbf{BDH-CQ (Pathway Research)} \\ \midrule
 \textbf{Sequence Length} & $\mathcal{O}(T)$ (expands per reasoning token) & $\mathcal{O}(1)$ (fixed prompt structure) & $\mathcal{O}(1)$ (invariant continuous state) \\
-\textbf{KV-Cache Scaling} & $\mathcal{O}(T)$ (linearly growing memory) & $\mathcal{O}(1)$ (no token accumulation) & $\mathcal{O}(1)$ (flat constant buffer) \\
+\textbf{KV-Cache Scaling} & $\mathcal{O}(T)$ (linearly growing memory footprint) & $\mathcal{O}(1)$ (no token accumulation) & $\mathcal{O}(1)$ (flat constant working buffer) \\
 \textbf{Test-Time Adaptation} & Appended prompt context tokens & Test-time backpropagation / weight updates & Forward-pass associative state updates ($U_\theta$) \\
-\textbf{Compute Mechanism} & Autoregressive sampling per step & Multi-epoch backward-pass search & Low-rank recurrent forward relaxation \\
+\textbf{Compute Mechanism} & Autoregressive softmax sampling per step & Multi-epoch backward-pass search on prompt & Low-rank recurrent forward relaxation \\
 \textbf{Observability} & High (human-readable English tokens) & Low (parameter distribution shift) & Low (continuous vector trajectory in $\mathbb{R}^d$) \\ \bottomrule
 \end{tabularx}
 \caption{Architectural comparison of test-time reasoning paradigms.}
 \label{tab:comparison}
 \end{table}
 
-\vspace{-1.1em}
+\vspace{-0.95em}
 \section{Empirical Evidence \& Pareto Dynamics}
-\vspace{-0.3em}
+\vspace{-0.25em}
 Verified benchmarks establish that recurrent latent computation shifts the ``intelligence-per-dollar'' Pareto frontier:
 \begin{itemize}
-    \item \textbf{ARC-AGI-1 Benchmark \cite{chollet2019}:} A 150M parameter BDH-CQ model achieved \textbf{29.5\% pass@2} at a verified inference cost of \textbf{\$0.0007 per task} \cite{bdhcq2026}. By comparison, GPT-5.6 Luna Low scored 34.2\% at \$0.0077 per task---an 11$\times$ cost premium for a 4.7 percentage point margin. Independent evaluations (including replications by \L{}. Kaiser and R. Zhong) verify that forward-pass associative memory reliably acquires inductive rules without test-time weight updates.
-    \item \textbf{Sudoku Extreme Evaluation:} Over $\sim$250,000 extreme puzzles, Pathway BDH attained \textbf{97.4\% accuracy} without emitting verbal tokens, executing backtracking routines, or relying on external symbolic verifiers \cite{pathway2025}, where dense LLMs (o3-mini, DeepSeek R1) collapsed due to cumulative token drift.
+    \item \textbf{ARC-AGI-1 Benchmark \cite{chollet2019}:} A 150M parameter BDH-CQ model achieved \textbf{29.5\% pass@2} at a computed inference cost of \textbf{\$0.0007 per task} (measured on NVIDIA H200 hardware under a \$3.00/hr compute standard) \cite{bdhcq2026}. By comparison, frontier autoregressive models such as GPT-5.6 Luna Low scored 34.2\% at \$0.0077 per task---an 11$\times$ cost premium for a 4.7 percentage point accuracy margin.
+    \item \textbf{Sudoku Extreme Evaluation:} Across $\sim$250,000 extreme puzzles, Pathway BDH attained \textbf{97.4\% accuracy} without emitting verbal tokens, executing backtracking routines, or relying on external symbolic verifiers \cite{pathway2025}, where dense autoregressive LLMs suffered from compounding token hallucination.
 \end{itemize}
 
-\vspace{-0.5em}
+\vspace{-0.45em}
 \section{Scientific Caveats \& Honest Limitations}
-\vspace{-0.3em}
-Despite compute efficiency gains, recurrent latent relaxation incurs trade-offs that bound its current utility:
+\vspace{-0.25em}
+Recurrent latent relaxation exhibits concrete trade-offs and structural failure modes documented in controlled interventions:
 \begin{enumerate}
-    \item \textbf{The Observability Gap:} CoT generates an auditable text scratchpad. When BDH-CQ settles into an incorrect attractor, no token-level trace exists to diagnose whether failure stemmed from demonstration encoding or recurrent relaxation dynamics.
-    \item \textbf{Non-Convex Attractor Trapping:} Recurrent relaxation is an energy minimization process. On complex coupled constraints, $h_t$ can stall in shallow local minima without the explicit backtracking pathways available to symbolic or verbalized solvers.
-    \item \textbf{Domain Bounds:} Verified advantages are proven on discrete constraint satisfaction (ARC-AGI, Sudoku); generalization to open-ended dialogue and external tool use remains unestablished.
+    \item \textbf{The Observability Gap:} CoT generates an auditable text scratchpad. In BDH-CQ, intermediate trajectories occur in continuous latent space; diagnostic failure analysis requires probing projection heads or sparse autoencoders (SAEs).
+    \item \textbf{Non-Convex Attractor Trapping:} Recurrent relaxation is an energy minimization process. On deceptive constraint puzzles, $h_t$ can stall in shallow local minima without the explicit backtracking pathways available to rejection-sampled token models.
+    \item \textbf{Compositional Property Binding Failure:} Controlled interventions in \cite{bdhcq2026} reveal catastrophic degradation on multi-attribute compositional binding (e.g., scoring \textbf{0/72 on color-swap composition}), exposing a vulnerability in disentangling relational visual features.
+    \item \textbf{Domain Bounds:} Verified advantages are proven on discrete spatial constraint grids (ARC-AGI, Sudoku); generalization to open-ended dialogue and external tool use remains unestablished.
 \end{enumerate}
 
-\vspace{-0.6em}
+\vspace{-0.55em}
 \begin{thebibliography}{3}
 \footnotesize
-\setlength{\itemsep}{-0.5pt}
-\bibitem{bdhcq2026} B. Engdahl, J. Chorowski, A. Kosowski, Z. Stamirowska, et al. \textit{BDH-CQ: In-Context Learning with Recurrent Latent Reasoning}. arXiv:2608.09888, 2026.
+\setlength{\itemsep}{-1.0pt}
+\bibitem{bdhcq2026} B. Engdahl, A. Kosowski, J. Chorowski, Z. Stamirowska, P. Uzna\'nski, R. Zhong, et al. \textit{BDH-CQ: In-Context Learning with Recurrent Latent Reasoning}. arXiv:2608.09888, 2026.
 \bibitem{pathway2025} Pathway Research. \textit{BDH (Dragon Hatchling): A Brain-Inspired Post-Transformer Architecture}. Technical Report, 2025/2026.
 \bibitem{chollet2019} F. Chollet. \textit{On the Measure of Intelligence}. arXiv:1911.01547, 2019.
 \end{thebibliography}
